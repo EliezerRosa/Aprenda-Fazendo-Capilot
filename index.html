@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenda Fazendo - Programação com IA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.12/mode/htmlmixed/htmlmixed.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            margin: 20px 0;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            width: 100%;
+            margin: 10px 0;
+        }
+        .code-container, .interactive-container {
+            width: 30%;
+            min-width: 300px;
+            height: 200px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+            box-sizing: border-box;
+        }
+        iframe {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            margin-top: 10px;
+        }
+        .interactive-container {
+            background-color: #f9f9f9;
+        }
+        @media (max-width: 768px) {
+            .code-container, .interactive-container {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Aprenda Fazendo - Programação com IA</h1>
+    <div class="container">
+        <div class="code-container" id="html-code">
+            <!-- HTML code here -->
+        </div>
+        <div class="code-container" id="css-code">
+            /* CSS code here */
+        </div>
+        <div class="code-container" id="js-code">
+            // JavaScript code here
+        </div>
+    </div>
+    <iframe id="result"></iframe>
+    <div class="container">
+        <div class="interactive-container" id="capilot">
+            <!-- O Capilot será carregado aqui -->
+            <iframe 
+                src="https://codepen.io/pen" 
+                style="width: 100%; height: 100%; border: none;">
+            </iframe>
+        </div>
+    </div>
+    <script>
+        // Inicialização dos editores CodeMirror
+        const htmlEditor = CodeMirror(document.getElementById('html-code'), { 
+            mode: 'htmlmixed', lineNumbers: true, value: '<!-- HTML code here -->' 
+        });
+        const cssEditor = CodeMirror(document.getElementById('css-code'), { 
+            mode: 'css', lineNumbers: true, value: '/* CSS code here */' 
+        });
+        const jsEditor = CodeMirror(document.getElementById('js-code'), { 
+            mode: 'javascript', lineNumbers: true, value: '// JavaScript code here' 
+        });
+
+        // Função para atualizar o resultado no iframe
+        function updateResult() {
+            const htmlCode = htmlEditor.getValue();
+            const cssCode = cssEditor.getValue();
+            const jsCode = jsEditor.getValue();
+            const resultFrame = document.getElementById('result').contentWindow.document;
+            resultFrame.open();
+            resultFrame.write(`
+                <style>${cssCode}</style>
+                ${htmlCode}
+                <script>${jsCode}<\/script>
+            `);
+            resultFrame.close();
+        }
+
+        // Adiciona evento de atualização em tempo real
+        htmlEditor.on('change', updateResult);
+        cssEditor.on('change', updateResult);
+        jsEditor.on('change', updateResult);
+    </script>
+</body>
+</html>
